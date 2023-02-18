@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
 import copy from 'clipboard-copy'
 import saveAs from 'file-saver'
-import { Leva, useControls, button } from 'leva'
+import { Leva, useControls, button, folder } from 'leva'
 import toast from 'react-hot-toast'
 import { isGlb } from '../utils/isExtension'
 import useSandbox from '../utils/useSandbox'
@@ -9,9 +9,61 @@ import Viewer from './viewer'
 import Code from './code'
 import useStore from '../utils/store'
 
+const LevaContainer = (props) => {
+  const { scene, updateScene } = useStore()
+  const setDefaults = () => {
+    let ObjControlsToSet = {}
+    let folderData = {}
+    let dataToReturn = {}
+    const defaults = {
+      frustumCulled: true,
+      visible: true,
+      castShadow: true,
+      receiveShadow: true
+    }
+    if(scene){
+      const setProperties = (scene) => {
+        if(scene.children){
+          scene.children.map((index) => setProperties(index))
+        }
+        const setData = (sceneObj) => {
+          for (let child in sceneObj){
+            for (let property in defaults){   
+              folderData[`${sceneObj.name}:${property}`] = sceneObj[property];
+              //console.log('sceneObj', sceneObj.name)
+              dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true });
+            }
+            folderData = {}
+          }
+        }
+        setData(scene)
+      }
+      setProperties(scene)
+      console.log('dataToReturn ', dataToReturn)
+      return (dataToReturn)
+    }
+}
+  let initialData = setDefaults()
+  const [sceneMap, setSceneMap] = useControls(() => ('scene',   {'scene': folder(initialData)}))
+
+  useEffect(() => {
+    if((scene && !sceneMap) || (scene && scene !== sceneMap)){
+      updateScene(sceneMap)
+      setSceneMap(sceneMap);
+    }
+  }, [sceneMap, scene])
+
+  return(
+    <>
+    {
+      props?.children
+    }
+    </>
+  )
+}
+
 const Result = () => {
   const { buffer, fileName, textOriginalFile, scene, code, createZip, generateScene, animations } = useStore()
-
   const [config, setConfig] = useControls(() => ({
     types: { value: false, hint: 'Add Typescript definitions' },
     shadows: { value: true, hint: 'Let meshes cast and receive shadows' },
@@ -102,6 +154,8 @@ const Result = () => {
 
   useControls('exports', exports, { collapsed: true }, [exports])
 
+
+
   return (
     <div className="h-full w-screen">
       {!code && !scene ? (
@@ -114,7 +168,7 @@ const Result = () => {
           </section>
         </div>
       )}
-      <Leva hideTitleBar collapsed />
+      {scene?.children && <LevaContainer ><Leva hideTitleBar collapsed /></LevaContainer>}
     </div>
   )
 }

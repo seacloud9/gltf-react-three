@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint --ext .js,.jsx .",
+    "lint:fix": "eslint './**/*.js{,x}' --fix --ext .js,.jsx"
   },
   "dependencies": {
     "@react-three/drei": "^9.18.0",
@@ -27,6 +29,7 @@
     "zustand": "^4.0.0"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^13.1.6",
     "autoprefixer": "^10.4.8",
     "eslint": "^8.20.0",
     "eslint-plugin-react": "^7.30.1",

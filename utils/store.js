@@ -32,12 +32,34 @@ const useStore = create((set, get) => ({
   animations: false,
   code: '',
   scene: null,
+  model: null,
+  setModel: (model) => set((state) => ({ ...state, model })),
   createZip: async ({ sandboxCode }) => {
     await import('../utils/createZip').then((mod) => mod.createZip)
     const { fileName, textOriginalFile, buffer } = get()
     const blob = await createZip({ sandboxCode, fileName, textOriginalFile, buffer })
 
     saveAs(blob, `${fileName.split('.')[0]}.zip`)
+  },
+  updateScene: async (propertiesToUpdate) => {
+    let currentSecene = get().scene;
+    if(currentSecene){
+      currentSecene.traverse((child) => {
+        if(currentSecene){
+          const name = child.name ? child.name : `${child.type}: ${child.uuid}`;
+         if (!child.name) {
+           child.name = name;
+         }else{
+           for (let updatedProperty in propertiesToUpdate){
+            let newData = updatedProperty.replace(`${child.name}:`, '')
+               console.log('updatedProperty ', updatedProperty, child, propertiesToUpdate, newData)
+               child[newData] = propertiesToUpdate[updatedProperty]
+           }
+         }
+      }})
+      console.log('currentSecene', currentSecene)
+      set({ scene: currentSecene })
+    }
   },
   generateScene: async (config) => {
     const { fileName, buffer } = get()
