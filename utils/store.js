@@ -69,8 +69,17 @@ const useStore = create((set, get) => ({
   },
   generateScene: async (config) => {
     const { fileName, buffer } = get()
-    const result = await new Promise((resolve, reject) => gltfLoader.parse(buffer, '', resolve, reject))
+    let result = await new Promise((resolve, reject) => gltfLoader.parse(buffer, '', resolve, reject))
 
+    if (IS_DEBUG) {
+      let sceneRaw = get().scene
+      console.log('generateScene: ', result.traverse)
+      if (sceneRaw?.traverse) {
+        result['scene'] = sceneRaw
+        result['scenes'] = [result['scene']]
+        result['animations'] = result.animations || []
+      }
+    }
     const code = parse(fileName, result, { ...config, printwidth: 100 })
 
     try {

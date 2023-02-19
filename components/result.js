@@ -11,7 +11,7 @@ import useStore from '../utils/store'
 import PropTypes from 'prop-types'
 import { IS_DEBUG } from '../utils/Globals'
 
-const LevaContainer = (props) => {
+const LevaContainer = ({ generateScene, children, config }) => {
   const { scene, updateScene } = useStore()
   const setDefaults = () => {
     let folderData = {}
@@ -55,14 +55,17 @@ const LevaContainer = (props) => {
     if ((scene && !sceneMap) || (scene && scene !== sceneMap)) {
       updateScene(sceneMap)
       setSceneMap(sceneMap)
+      generateScene(config)
     }
   }, [sceneMap, scene])
 
-  return <>{props?.children}</>
+  return <>{children}</>
 }
 
 LevaContainer.propTypes = {
   children: PropTypes.element.isRequired,
+  config: PropTypes.any.isRequired,
+  generateScene: PropTypes.func.isRequired,
 }
 
 const Result = () => {
@@ -170,7 +173,7 @@ const Result = () => {
         </div>
       )}
       {scene?.children && (
-        <LevaContainer>
+        <LevaContainer generateScene={generateScene} config={config}>
           <Leva hideTitleBar collapsed />
         </LevaContainer>
       )}
