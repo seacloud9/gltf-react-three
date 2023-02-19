@@ -1,4 +1,6 @@
+import React from 'react'
 import { useDropzone } from 'react-dropzone'
+import PropTypes from 'prop-types'
 
 const FileDrop = ({ onDrop, useSuzanne }) => {
   const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
@@ -26,6 +28,11 @@ const FileDrop = ({ onDrop, useSuzanne }) => {
       ) : null}
     </div>
   )
+}
+
+FileDrop.propTypes = {
+  onDrop: PropTypes.func.isRequired,
+  useSuzanne: PropTypes.func.isRequired,
 }
 
 export default FileDrop

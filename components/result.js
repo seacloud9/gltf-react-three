@@ -8,30 +8,33 @@ import useSandbox from '../utils/useSandbox'
 import Viewer from './viewer'
 import Code from './code'
 import useStore from '../utils/store'
+import PropTypes from 'prop-types'
+import { IS_DEBUG } from '../utils/Globals'
 
 const LevaContainer = (props) => {
   const { scene, updateScene } = useStore()
   const setDefaults = () => {
-    let ObjControlsToSet = {}
     let folderData = {}
     let dataToReturn = {}
     const defaults = {
       frustumCulled: true,
       visible: true,
       castShadow: true,
-      receiveShadow: true
+      receiveShadow: true,
     }
-    if(scene){
+    if (scene) {
       const setProperties = (scene) => {
-        if(scene.children){
+        if (scene.children) {
           scene.children.map((index) => setProperties(index))
         }
         const setData = (sceneObj) => {
-          for (let child in sceneObj){
-            for (let property in defaults){   
-              folderData[`${sceneObj.name}:${property}`] = sceneObj[property];
-              //console.log('sceneObj', sceneObj.name)
-              dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true });
+          for (let child in sceneObj) {
+            if (IS_DEBUG) {
+              console.log('setProperties of child:', child)
+            }
+            for (let property in defaults) {
+              folderData[`${sceneObj.name}:${property}`] = sceneObj[property]
+              dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true })
             }
             folderData = {}
           }
@@ -39,27 +42,27 @@ const LevaContainer = (props) => {
         setData(scene)
       }
       setProperties(scene)
-      console.log('dataToReturn ', dataToReturn)
-      return (dataToReturn)
+      if (IS_DEBUG) {
+        console.log('dataToReturn ', dataToReturn)
+      }
+      return dataToReturn
     }
-}
+  }
   let initialData = setDefaults()
-  const [sceneMap, setSceneMap] = useControls(() => ('scene',   {'scene': folder(initialData)}))
+  const [sceneMap, setSceneMap] = useControls(() => ('scene', { scene: folder(initialData) }))
 
   useEffect(() => {
-    if((scene && !sceneMap) || (scene && scene !== sceneMap)){
+    if ((scene && !sceneMap) || (scene && scene !== sceneMap)) {
       updateScene(sceneMap)
-      setSceneMap(sceneMap);
+      setSceneMap(sceneMap)
     }
   }, [sceneMap, scene])
 
-  return(
-    <>
-    {
-      props?.children
-    }
-    </>
-  )
+  return <>{props?.children}</>
+}
+
+LevaContainer.propTypes = {
+  children: PropTypes.element.isRequired,
 }
 
 const Result = () => {
@@ -154,8 +157,6 @@ const Result = () => {
 
   useControls('exports', exports, { collapsed: true }, [exports])
 
-
-
   return (
     <div className="h-full w-screen">
       {!code && !scene ? (
@@ -168,7 +169,11 @@ const Result = () => {
           </section>
         </div>
       )}
-      {scene?.children && <LevaContainer ><Leva hideTitleBar collapsed /></LevaContainer>}
+      {scene?.children && (
+        <LevaContainer>
+          <Leva hideTitleBar collapsed />
+        </LevaContainer>
+      )}
     </div>
   )
 }

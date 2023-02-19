@@ -1,6 +1,7 @@
 import React, { Suspense, useLayoutEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stage } from '@react-three/drei'
+import PropTypes from 'prop-types'
 import useStore from '../utils/store'
 
 export default function Viewer({ shadows, contactShadow, autoRotate, environment, preset, intensity }) {
@@ -26,11 +27,21 @@ export default function Viewer({ shadows, contactShadow, autoRotate, environment
           contactShadow={contactShadow}
           shadows
           adjustCamera
-          environment={environment}>
+          environment={environment}
+        >
           <primitive object={scene} />
         </Stage>
       </Suspense>
       <OrbitControls ref={ref} autoRotate={autoRotate} />
     </Canvas>
   )
+}
+
+Viewer.propTypes = {
+  shadows: PropTypes.bool.isRequired,
+  contactShadow: PropTypes.bool.isRequired,
+  autoRotate: PropTypes.bool.isRequired,
+  environment: PropTypes.any.isRequired,
+  preset: PropTypes.any.isRequired,
+  intensity: PropTypes.any.isRequired,
 }

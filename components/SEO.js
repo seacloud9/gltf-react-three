@@ -1,3 +1,4 @@
+import React from 'react'
 import Head from 'next/head'
 
 const SEO = () => (
@@ -11,7 +12,8 @@ const SEO = () => (
     <title>GLTF {'->'} React Three Fiber </title>
     <meta
       name="description"
-      content="Easily convert GLTF models into React Three Fiber components to use in your projects"></meta>
+      content="Easily convert GLTF models into React Three Fiber components to use in your projects"
+    ></meta>
   </Head>
 )
 

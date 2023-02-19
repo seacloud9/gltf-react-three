@@ -1,5 +1,7 @@
+import React from 'react'
 import theme from 'prism-react-renderer/themes/nightOwlLight'
 import Highlight, { defaultProps } from 'prism-react-renderer'
+import PropTypes from 'prop-types'
 
 const Code = ({ children }) => {
   return (
@@ -10,7 +12,8 @@ const Code = ({ children }) => {
           style={{
             ...style,
             fontSize: 12,
-          }}>
+          }}
+        >
           {tokens.map((line, i) => (
             <div key={i} {...getLineProps({ line, key: i })}>
               {line.map((token, key) => (
@@ -22,6 +25,10 @@ const Code = ({ children }) => {
       )}
     </Highlight>
   )
+}
+
+Code.propTypes = {
+  children: PropTypes.element.isRequired,
 }
 
 export default Code

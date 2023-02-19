@@ -1,3 +1,4 @@
+import React from 'react'
 import { GitHub, Logo } from './icons'
 
 const Footer = () => (
@@ -11,13 +12,15 @@ const Footer = () => (
         className="underline hover:text-blue-600"
         href="https://twitter.com/NikkitaFTW"
         target="_blank"
-        rel="noreferrer">
+        rel="noreferrer"
+      >
         @NikkitaFTW
       </a>{' '}
       &{' '}
       <a
         className="underline hover:text-blue-600"
-        href="https://github.com/pmndrs/gltf-react-three/graphs/contributors">
+        href="https://github.com/pmndrs/gltf-react-three/graphs/contributors"
+      >
         contributors
       </a>{' '}
       inspired by the{' '}

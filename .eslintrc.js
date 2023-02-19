@@ -1,25 +1,21 @@
+/*global module */
+/*eslint no-undef: "error"*/
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-  },
-  extends: ['eslint:recommended', 'plugin:@next/next/recommended', 'plugin:react/recommended'],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
+    "env": {
+        "browser": true,
+        "es2021": true
     },
-    ecmaVersion: 12,
-    sourceType: 'module',
-  },
-  plugins: ['react'],
-  settings: {
-    react: {
-      version: 'detect',
+    "extends":['eslint:recommended', 'plugin:@next/next/recommended', 'plugin:react/recommended'],
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
-  },
-  globals: {
-    React: 'writable',
-    module: 'readable',
-  },
-  rules: { 'react/prop-types': 0 },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "react/no-unknown-property": ['off']
+    },
 }
