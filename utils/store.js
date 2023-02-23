@@ -83,8 +83,9 @@ const useStore = create((set, get) => ({
         result['animations'] = result.animations || []
       }
     }
-
-    console.log("parse before sending to gltfx", result);
+    if (IS_DEBUG) {
+      console.log("parse before sending to gltfx", result);
+    }
     const code = parse(fileName, result, { ...config, printwidth: 100 })
 
     try {

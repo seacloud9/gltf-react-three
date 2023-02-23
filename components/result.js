@@ -11,7 +11,7 @@ import useStore from '../utils/store'
 import PropTypes from 'prop-types'
 import { IS_DEBUG } from '../utils/Globals'
 
-const LevaContainer = ({ generateScene, children, config }) => {
+const LevaContainer = ({ generateScene, children, config, exports }) => {
   const { scene, updateScene } = useStore()
   const setDefaults = () => {
     let folderData = {}
@@ -53,8 +53,9 @@ const LevaContainer = ({ generateScene, children, config }) => {
     }
   }
   let initialData = setDefaults()
+  
   const [sceneMap, setSceneMap] = useControls(() => ('scene', { scene: folder(initialData) }))
-
+  useControls('exports', exports, { collapsed: true }, [exports])
   useEffect(() => {
     if ((scene && !sceneMap) || (scene && scene !== sceneMap)) {
       updateScene(sceneMap)
@@ -70,6 +71,7 @@ LevaContainer.propTypes = {
   children: PropTypes.element.isRequired,
   config: PropTypes.any.isRequired,
   generateScene: PropTypes.func.isRequired,
+  exports: PropTypes.any.isRequired,
 }
 
 const Result = () => {
@@ -161,7 +163,7 @@ const Result = () => {
     return temp
   }, [fileName, loading, error, sandboxCode, sandboxId, config.types])
 
-  useControls('exports', exports, { collapsed: true }, [exports])
+ 
 
   return (
     <div className="h-full w-screen">
@@ -176,7 +178,7 @@ const Result = () => {
         </div>
       )}
       {scene?.children && (
-        <LevaContainer generateScene={generateScene} config={config}>
+        <LevaContainer generateScene={generateScene} config={config} exports={exports}>
           <Leva hideTitleBar collapsed />
         </LevaContainer>
       )}
