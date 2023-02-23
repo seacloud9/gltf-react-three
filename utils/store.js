@@ -38,6 +38,7 @@ const useStore = create((set, get) => ({
   createZip: async ({ sandboxCode }) => {
     await import('../utils/createZip').then((mod) => mod.createZip)
     const { fileName, textOriginalFile, buffer } = get()
+    console.log('createZip: ', textOriginalFile)
     const blob = await createZip({ sandboxCode, fileName, textOriginalFile, buffer })
 
     saveAs(blob, `${fileName.split('.')[0]}.zip`)
@@ -55,7 +56,7 @@ const useStore = create((set, get) => ({
             child.name = name
           } else {
             for (let updatedProperty in propertiesToUpdate) {
-              let newData = updatedProperty.replace(`${child.name}:`, '')
+              let newData = updatedProperty.replace(`:${child.name}`, '')
               child[newData] = propertiesToUpdate[updatedProperty]
             }
           }
@@ -73,13 +74,15 @@ const useStore = create((set, get) => ({
 
     if (IS_DEBUG) {
       let sceneRaw = get().scene
-      console.log('generateScene: ', result.traverse)
+      console.log('parse generateScene: ', result)
       if (sceneRaw?.traverse) {
         result['scene'] = sceneRaw
         result['scenes'] = [result['scene']]
         result['animations'] = result.animations || []
       }
     }
+
+    console.log("parse before sending to gltfx", result);
     const code = parse(fileName, result, { ...config, printwidth: 100 })
 
     try {

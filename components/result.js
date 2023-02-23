@@ -33,7 +33,10 @@ const LevaContainer = ({ generateScene, children, config }) => {
               console.log('setProperties of child:', child)
             }
             for (let property in defaults) {
-              folderData[`${sceneObj.name}:${property}`] = sceneObj[property]
+              folderData[`${property}:${sceneObj.name}`] = {
+                label: property,
+                value: sceneObj[property],
+              }
               dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true })
             }
             folderData = {}
@@ -72,7 +75,6 @@ const Result = () => {
   const { buffer, fileName, textOriginalFile, scene, code, createZip, generateScene, animations } = useStore()
   const [config, setConfig] = useControls(() => ({
     types: { value: false, hint: 'Add Typescript definitions' },
-    shadows: { value: true, hint: 'Let meshes cast and receive shadows' },
     instanceall: { label: 'instance all', value: false, hint: 'Instance every geometry (for cheaper re-use)' },
     instance: { value: false, hint: ' Instance re-occuring geometry' },
     verbose: { value: false, hint: 'Verbose output w/ names and empty groups' },
