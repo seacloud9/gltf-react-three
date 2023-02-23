@@ -44,28 +44,30 @@ const useStore = create((set, get) => ({
     saveAs(blob, `${fileName.split('.')[0]}.zip`)
   },
   updateScene: async (propertiesToUpdate) => {
-    let currentSecene = get().scene
+    let currentScene = get().scene
     if (IS_DEBUG) {
-      console.log('updateScene: preupdate ', currentSecene)
+      console.log('updateScene: preupdate ', currentScene)
     }
-    if (currentSecene) {
-      currentSecene.traverse((child) => {
-        if (currentSecene) {
+    if (currentScene) {
+      currentScene.traverse((child) => {
+        if (currentScene) {
           const name = child.name ? child.name : `${child.type}: ${child.uuid}`
           if (!child.name) {
             child.name = name
           } else {
             for (let updatedProperty in propertiesToUpdate) {
               let newData = updatedProperty.replace(`:${child.name}`, '')
-              child[newData] = propertiesToUpdate[updatedProperty]
+              if(!newData.match(':')){
+                child[newData] = propertiesToUpdate[updatedProperty];
+              }
             }
           }
         }
       })
       if (IS_DEBUG) {
-        console.log('currentSecene', currentSecene)
+        console.log('currentScene', currentScene)
       }
-      set({ scene: currentSecene })
+      set({ scene: currentScene })
     }
   },
   generateScene: async (config) => {

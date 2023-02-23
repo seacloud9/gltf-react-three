@@ -35,6 +35,7 @@ const LevaContainer = ({ generateScene, children, config }) => {
             for (let property in defaults) {
               folderData[`${property}:${sceneObj.name}`] = {
                 label: property,
+                hint: `${property}:${sceneObj.name}`,
                 value: sceneObj[property],
               }
               dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true })
