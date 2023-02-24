@@ -57,8 +57,8 @@ const useStore = create((set, get) => ({
           } else {
             for (let updatedProperty in propertiesToUpdate) {
               let newData = updatedProperty.replace(`:${child.name}`, '')
-              if(!newData.match(':')){
-                child[newData] = propertiesToUpdate[updatedProperty];
+              if (!newData.match(':')) {
+                child[newData] = propertiesToUpdate[updatedProperty]
               }
             }
           }
@@ -84,7 +84,7 @@ const useStore = create((set, get) => ({
       }
     }
     if (IS_DEBUG) {
-      console.log("parse before sending to gltfx", result);
+      console.log('parse before sending to gltfx', result)
     }
     const code = parse(fileName, result, { ...config, printwidth: 100 })
 

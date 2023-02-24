@@ -17,10 +17,20 @@ const LevaContainer = ({ generateScene, children, config, exports }) => {
     let folderData = {}
     let dataToReturn = {}
     const defaults = {
-      frustumCulled: true,
-      visible: true,
-      castShadow: true,
-      receiveShadow: true,
+      bool: {
+        frustumCulled: true,
+        visible: true,
+        castShadow: true,
+        receiveShadow: true,
+      },
+      number: {
+        renderOrder: {
+          value: 0,
+          min: 0,
+          max: 1000,
+          step: 1.0,
+        },
+      },
     }
     if (scene) {
       const setProperties = (scene) => {
@@ -32,11 +42,24 @@ const LevaContainer = ({ generateScene, children, config, exports }) => {
             if (IS_DEBUG) {
               console.log('setProperties of child:', child)
             }
-            for (let property in defaults) {
+            // handle boolean
+            for (let property in defaults.bool) {
               folderData[`${property}:${sceneObj.name}`] = {
                 label: property,
                 hint: `${property}:${sceneObj.name}`,
                 value: sceneObj[property],
+              }
+              dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true })
+            }
+            // handle number
+            for (let property in defaults.number) {
+              folderData[`${property}:${sceneObj.name}`] = {
+                label: property,
+                hint: `${property}:${sceneObj.name}`,
+                value: sceneObj[property],
+                min: property.min,
+                max: property.max,
+                step: property.step,
               }
               dataToReturn[sceneObj.name] = folder(folderData, { collapsed: true })
             }
@@ -53,7 +76,7 @@ const LevaContainer = ({ generateScene, children, config, exports }) => {
     }
   }
   let initialData = setDefaults()
-  
+
   const [sceneMap, setSceneMap] = useControls(() => ('scene', { scene: folder(initialData) }))
   useControls('exports', exports, { collapsed: true }, [exports])
   useEffect(() => {
@@ -162,8 +185,6 @@ const Result = () => {
 
     return temp
   }, [fileName, loading, error, sandboxCode, sandboxId, config.types])
-
- 
 
   return (
     <div className="h-full w-screen">
