@@ -1,10 +1,12 @@
 import React, { Suspense, useLayoutEffect, useRef } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stage } from '@react-three/drei'
+import { Canvas, extend } from '@react-three/fiber'
+import { OrbitControls, Stage, Effects } from '@react-three/drei'
+import { FilmPass, WaterPass, UnrealBloomPass, LUTPass } from 'three-stdlib'
 import PropTypes from 'prop-types'
 import useStore from '../utils/store'
+extend({ WaterPass, UnrealBloomPass, FilmPass, LUTPass })
 
-export default function Viewer({ shadows, contactShadow, autoRotate, environment, preset, intensity }) {
+export default function Viewer({ shadows, contactShadow, autoRotate, environment, preset, intensity, useGlobalBloom }) {
   const scene = useStore((store) => store.scene)
   const ref = useRef()
   useLayoutEffect(() => {
@@ -18,7 +20,6 @@ export default function Viewer({ shadows, contactShadow, autoRotate, environment
 
   return (
     <Canvas gl={{ preserveDrawingBuffer: true }} shadows dpr={[1, 1.5]} camera={{ position: [0, 0, 150], fov: 50 }}>
-      <ambientLight intensity={0.25} />
       <Suspense fallback={null}>
         <Stage
           controls={ref}
@@ -29,10 +30,18 @@ export default function Viewer({ shadows, contactShadow, autoRotate, environment
           adjustCamera
           environment={environment}
         >
-          <primitive object={scene} />
+          <>
+            <ambientLight intensity={0.25} />
+            <primitive object={scene} />
+            <OrbitControls ref={ref} autoRotate={autoRotate} />
+          </>
+          {useGlobalBloom && (
+            <Effects>
+              <unrealBloomPass args={[undefined, 1.25, 1, 0]} />
+            </Effects>
+          )}
         </Stage>
       </Suspense>
-      <OrbitControls ref={ref} autoRotate={autoRotate} />
     </Canvas>
   )
 }

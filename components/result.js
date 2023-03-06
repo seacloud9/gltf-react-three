@@ -106,6 +106,7 @@ const Result = () => {
     verbose: { value: false, hint: 'Verbose output w/ names and empty groups' },
     keepnames: { value: false, label: 'keep names', hint: 'Keep original names' },
     keepgroups: { value: false, label: 'keep groups', hint: 'Keep (empty) groups' },
+    useGlobalBloom: { value: false, label: 'use global bloom', hint: 'enables bloom globally' },
     aggressive: { value: false, hint: 'Aggressively prune the graph (empty groups, transform overlap)' },
     meta: { value: false, hint: 'Include metadata (as userData)' },
     precision: { value: 2, min: 1, max: 8, step: 1, hint: 'Number of fractional digits (default: 2)' },
